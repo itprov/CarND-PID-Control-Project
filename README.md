@@ -28,17 +28,17 @@ This component results in dampening the oscillations caused by P & I components 
 **Hyperparameter value selection**
 * I manually tuned the coefficients of the 3 components (Kp, Ki, and Kd). I started with Kp = 1.0, Kd = 0, Ki = 0, and then gradually decreased the value of Kp (to decrease the oscillation amplitude) while increasing the other 2 coefficient values.
 
-![P controlled steering](./videos/P.mov)
+[P controlled steering](./videos/P.mov)
 
 * As mentioned above, I found that the I component resulted in amplifying the oscillation amplitude and frequency. I left a non-zero value of Ki = 0.0003 to ensure the controller will continue to work in case of biased system or steering drift. Values of Ki around 0.001 and above were found to be too high for the vehicle to safely drive along the track.
 
-![PI controlled steering](./videos/PI.mov)
+[PI controlled steering](./videos/PI.mov)
 
 * Finally, I set Kd = 1.0 and increased it by 1 until the vehicle was able to drive safely along the entire track multiple times. Increasing Kd to values higher than 5.0 didn't seem to have any significant effect on the CTE.
 
 The final combination of the hyperparameters is Kp = 0.2, Ki = 0.0003, Kd = 5.0.
 
-![Final PID controlled steering](./videos/PID.mov)
+[Final PID controlled steering](./videos/PID.mov)
 
 
 ## Dependencies
