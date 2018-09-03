@@ -2,6 +2,39 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## PID controller - Reflection
+
+The PID controller comprises of 3 components: P (Proportional), I (Integral), and D (Differential). Here's the effect of these 3 components in the PID algorithm:
+
+[//]: # (Image References)
+
+[image1]: ./images/P_vs_PI.png "Effect of adding I component"
+[image2]: ./images/P_vs_PI_vs_PID.png "Effect of adding D component"
+
+**P (Proportional) Component**
+This component causes steering of the vehicle toward the reference trajectory (in this case the center line of the track) in proportion to the cross-track error (CTE), which is the lateral distance between the reference trajectory and the vehicle. Use of this component alone results in overshooting of the vehicle about the center line, i.e. the vehicle oscillates on the road. The larger the value of the P component coefficient (Kp), the larger the amplitude of oscillations.
+
+**I (Integral) Component**
+This component results in compensating CTE increase caused by the systematic bias, such as steering drift causing the vehicle to turn away from the reference trajectory, due to misaligned wheels. It is proportional to the integrated CTE, which is the integral or sum of all CTEs accumulated over time.
+In a perfect vehicle, if there is 0 bias in the vehicle system, use of this component would not be necessary. Apparently it amplifies the amplitude and frequency of oscillations in an unbiased system.
+![Effect of adding I component][image1]
+
+**D (Differential) Component**
+This component results in dampening the oscillations caused by P & I components and thereby avoiding the overshooting of the vehicle. It is proportional to the derivative of CTE w.r.t. time.
+![Effect of adding D component][image2]
+
+**Hyperparameter value selection**
+* I manually tuned the coefficients of the 3 components (Kp, Ki, and Kd). I started with Kp = 1.0, Kd = 0, Ki = 0, and then gradually decreased the value of Kp (to decrease the oscillation amplitude) while increasing the other 2 coefficient values.
+[P controlled steering](./videos/P.mov)
+
+* As mentioned above, I found that the I component resulted in amplifying the oscillation amplitude and frequency. I left a non-zero value of Ki = 0.0003 to ensure the controller will continue to work in case of biased system or steering drift. Values of Ki around 0.001 and above were found to be too high for the vehicle to safely drive along the track.
+[PI controlled steering](./videos/PI.mov)
+
+* Finally, I set Kd = 1.0 and increased it by 1 until the vehicle was able to drive safely along the entire track multiple times. Increasing Kd to values higher than 5.0 didn't seem to have any significant effect on the CTE. 
+
+The final combination of the hyperparameters is Kp = 0.2, Ki = 0.0003, Kd = 5.0.
+[Final PID controlled steering](./videos/PID.mov)
+
 
 ## Dependencies
 
@@ -19,7 +52,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -33,7 +66,7 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
@@ -95,4 +128,3 @@ still be compilable with cmake and make./
 
 ## How to write a README
 A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
-
